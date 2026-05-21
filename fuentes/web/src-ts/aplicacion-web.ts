@@ -26,10 +26,22 @@ import { CauceSombras } from "./cauce-sombras.js"
 
 // Función (no miembro) que visualiza el frame de la aplicación en el estado actual.
 
+let frame_solicitado : boolean = false 
+
 function VisualizarFrameAplicacionWeb()
 {
+   frame_solicitado = false
    let app = AplicacionWeb.instancia 
    app.visualizarFrame()
+}
+
+export function SolicitarFrameAplicacionWeb()
+{
+   if ( ! frame_solicitado )
+   {
+      frame_solicitado = true
+      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+   }
 }
 
 // -------------------------------------------------------------------
@@ -712,7 +724,7 @@ export class AplicacionWeb
       // cambia el valor del parámetro S en el objeto actual:
       this.objetos[this.indice_objeto_actual].param_S = this.param_S
 
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
    // -------------------------------------------------------------------------
    /**
@@ -809,7 +821,7 @@ export class AplicacionWeb
          }
 
          this.actualizarBotonEstadoAnim( obj_anim )
-         window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+         SolicitarFrameAplicacionWeb()
       }
       else
       {
@@ -846,7 +858,7 @@ export class AplicacionWeb
          te.innerHTML = "En inicio"
          this.estado  = "Animación parada y puesta en estado inicial"
 
-         window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+         SolicitarFrameAplicacionWeb()
       }
       else
       {
@@ -899,7 +911,7 @@ export class AplicacionWeb
 
       this.col_fuentes[0].long = this.long_luz
 
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
 
    // -------------------------------------------------------------------------
@@ -919,7 +931,7 @@ export class AplicacionWeb
       // cambia el valor de la latitud de la fuente de luz en la colección de fuentes de luz:
       this.col_fuentes[0].lat = this.lat_luz
 
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
    //--------------------------------------------------------------------------- 
    /**
@@ -981,7 +993,7 @@ export class AplicacionWeb
       this.canvas.width  = this.canvas.clientWidth
       this.canvas.height = this.canvas.clientHeight
 
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
    // -------------------------------------------------------------------------
 
@@ -1269,7 +1281,7 @@ export class AplicacionWeb
          {
             const T_objetivo_ms = 16 ;
             const t_restante_ms = Math.max( 0.0, T_objetivo_ms - t_visu_ms  )
-            setTimeout( VisualizarFrameAplicacionWeb, t_restante_ms )
+            SolicitarFrameAplicacionWeb()
          }
       }
       
@@ -1353,7 +1365,7 @@ export class AplicacionWeb
       objeto.param_S = this.param_S 
       this.actualizarBotonEstadoAnim( objeto )
 
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
    // ------------------------------------------------------------------------------------
 
@@ -1374,7 +1386,7 @@ export class AplicacionWeb
       if ( this.input_color_defecto != null )
          this.input_color_defecto.value = this.color_defecto.hexColorStr() 
       
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
    // ------------------------------------------------------------------------------------
    
@@ -1392,7 +1404,7 @@ export class AplicacionWeb
          this.input_boton_ejes.checked = this.visualizar_ejes
       const msg : string = `Visualizar ejes: ${this.visualizar_ejes ? "activado" : "desactivado"}`
       this.estado = msg 
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
    // ------------------------------------------------------------------------------------
    
@@ -1410,7 +1422,7 @@ export class AplicacionWeb
          this.input_boton_aristas.checked = this.visualizar_aristas 
       const msg : string = `Visualizar aristas: ${this.visualizar_aristas ? "activado" : "desactivado"}`
       this.estado = msg 
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
     // ------------------------------------------------------------------------------------
    
@@ -1428,7 +1440,7 @@ export class AplicacionWeb
          this.input_boton_normales.checked = this.visualizar_normales 
       const msg : string = `Visualizar normales: ${this.visualizar_normales ? "activado" : "desactivado"}`
       this.estado = msg 
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
 
     // ------------------------------------------------------------------------------------
@@ -1447,7 +1459,7 @@ export class AplicacionWeb
          this.input_boton_iluminacion.checked = this.iluminacion 
       const msg : string = `Iluminación: ${this.iluminacion ? "activada" : "desactivada"}`
       this.estado = msg 
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
    // ------------------------------------------------------------------------------------
    
@@ -1465,7 +1477,7 @@ export class AplicacionWeb
          this.input_boton_sombras_arrojadas.checked = this.evaluar_sombras
       const msg : string = `Sombras arrojadas: ${this.evaluar_sombras ? "activada" : "desactivada"}`
       this.estado = msg 
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
    // ------------------------------------------------------------------------------------
    
@@ -1483,7 +1495,7 @@ export class AplicacionWeb
          this.input_boton_visualizar_fbo_sombras.checked = this.visualizar_fbo_sombras
       const msg : string = `Visualizar FBO de sombras arrojadas: ${this.visualizar_fbo_sombras ? "activado" : "desactivado"}`
       this.estado = msg 
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
    }
    // ------------------------------------------------------------------------------------
 
@@ -1541,7 +1553,7 @@ export class AplicacionWeb
       let camara = this.camaras[this.indice_objeto_actual]
 
       camara.mover( dh, dv )
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
 
       return false
    }
@@ -1586,7 +1598,7 @@ export class AplicacionWeb
       let camara = this.camaras[this.indice_objeto_actual]
 
       camara.zoom( signo )
-      window.requestAnimationFrame( VisualizarFrameAplicacionWeb )
+      SolicitarFrameAplicacionWeb()
       return false
    }
    // --------------------------------------------------------------------------------
